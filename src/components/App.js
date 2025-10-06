@@ -1,47 +1,40 @@
 import React, { useState } from "react";
+import "./../styles/App.css";
 import Todo from "./Todo";
-import "../styles/App.css";
 
-function App() {
+const App = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
 
-  const handleAddTodo = () => {
-    if (task.trim() !== "") {
-      setTodos([...todos, task]);
-      setTask("");
-    }
+  const addTask = () => {
+    if (task.trim() === "") return;
+    setTodos([...todos, task]);
+    setTask("");
   };
 
-  const handleDelete = (index) => {
-    const updated = todos.filter((_, i) => i !== index);
-    setTodos(updated);
+  const deleteTask = (index) => {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);   // ✅ fixed here
   };
 
   return (
-    <div id="main">
-      <input
-        id="taskInput"
-        type="text"
-        value={task}
-        placeholder="Enter a task"
-        onChange={(e) => setTask(e.target.value)}
-      />
-      <button id="addBtn" onClick={handleAddTodo}>
-        Add Todo
-      </button>
+    <div className="app-container">
+      <h1>To-Do List</h1>
+      <div className="input-container">
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Enter a task"
+        />
+        <button type="button" onClick={addTask}>
+          Add Todo
+        </button>
+      </div>
 
-      <ul>
-        {todos.map((todo, index) => (
-          <Todo
-            key={index}
-            text={todo}
-            onDelete={() => handleDelete(index)}
-          />
-        ))}
-      </ul>
+      <Todo todos={todos} deleteTask={deleteTask} />
     </div>
   );
-}
+};
 
 export default App;
